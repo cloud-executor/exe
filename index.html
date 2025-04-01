@@ -3,197 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIXU</title>
+    <title>Script Finder 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root {
             --neon: #00ff00;
-            --glow: rgba(0, 255, 0, 0.3);
-            --dark: #000000;
+            --glow: rgba(0, 255, 0, 0.8);
+            --dark: #0a0a0a;
+            --light-dark: #111;
         }
 
         body {
-            background: var(--dark);
+            background: radial-gradient(circle, rgba(0, 255, 0, 0.05) 10%, transparent 60%), var(--dark);
             color: white;
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 20px;
-            min-height: 100vh;
+            padding: 0;
+            height: 100vh;
+            overflow-x: hidden;
+            perspective: 1000px;
         }
 
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.5);
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 15px;
-            border: 1px solid var(--glow);
-            box-shadow: 0 0 15px var(--glow);
+            border: 2px solid var(--glow);
+            box-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow) inset;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            transform: rotateX(10deg) rotateY(10deg);
+            transition: transform 0.5s ease-out;
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            color: var(--neon);
-            text-shadow: 0 0 10px var(--glow);
+        .container:hover {
+            transform: rotateX(0deg) rotateY(0deg) scale(1.05);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            border: 2px solid var(--glow);
+            box-shadow: 0 0 10px var(--glow);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .search-box:hover {
+            transform: scale(1.1);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px;
+            font-size: 1rem;
+            color: white;
+            background: transparent;
+            border: none;
+            outline: none;
+            text-shadow: 0 0 5px var(--glow);
+        }
+
+        .search-button {
+            padding: 14px 22px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: black;
+            background: var(--neon);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--glow), 0 0 30px var(--glow) inset;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-button::after {
+            content: '';
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 60%);
+            top: -100%;
+            left: -100%;
+            transition: transform 0.4s ease-out;
+        }
+
+        .search-button:hover::after {
+            transform: translate(100%, 100%);
         }
 
         .tab-buttons {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
             margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            border: 1px solid var(--glow);
         }
 
         .tab-button {
-            padding: 10px 20px;
+            padding: 12px 22px;
             background: transparent;
             border: 2px solid var(--neon);
             color: var(--neon);
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: 0.3s;
+            box-shadow: 0 0 10px var(--glow) inset;
+            transform: translateY(0);
         }
 
-        .tab-button:hover, .tab-button.active {
+        .tab-button:hover {
+            background: var(--neon);
+            color: black;
+            transform: translateY(-3px);
+        }
+
+        .tab-button.active {
             background: var(--neon);
             color: black;
         }
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .link-card {
+        .link-script-card {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid var(--glow);
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 15px;
-            margin-bottom: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 15px var(--glow);
         }
 
-        .download-button {
-            display: inline-block;
-            padding: 15px 30px;
-            margin-top: 10px;
-            font-size: 1.2rem;
-            color: black;
-            background: var(--neon);
-            border-radius: 10px;
-            text-decoration: none;
-            transition: 0.3s;
+        .link-script-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .download-button:hover {
-            background: var(--dark);
+        .link-Game {
+            margin-top: 20px;
+        }
+
+        .link {
             color: var(--neon);
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .link:hover {
+            color: white;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search for scripts...">
+            <button class="search-button"><i class="fa-solid fa-search"></i> Search</button>
+        </div>
 
-    <header>
-        <h1>Welcome to TIXU Executor</h1>
-    </header>
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="scripts">Scripts</button>
+            <button class="tab-button" data-tab="beta">Beta Scripts</button>
+        </div>
 
-    <div class="tab-buttons">
-        <button class="tab-button" data-tab="features"><i class="fa-solid fa-list"></i> Features</button>
-        <button class="tab-button" data-tab="scripts"><i class="fa-solid fa-code"></i> Scripts</button>
-        <button class="tab-button" data-tab="downloading"><i class="fa-solid fa-download"></i> Downloading</button>
-    </div>
+        <div class="tab-content active" id="scripts">
+            <div class="link-script-card">🔍 Find stable and tested scripts here.</div>
+            <div class="link-script-card">🔥 New auto-execution script available!</div>
+            <div class="link-script-card">⚡ Optimized performance Lua executor.</div>
+        </div>
 
-    <div class="tab-content" id="features">
-        <div class="link-card">
-            <h2>Why Choose Our Lua Executor?</h2>
-            <p>Our Lua executor stands out from the competition with its unparalleled performance and user-friendly interface. Key features:</p>
-            <ul>
-                <li><i class="fa-solid fa-file"></i> Auto-save for developers.</li>
-                <li><i class="fa-solid fa-shield"></i> No viruses, just execution.</li>
-                <li><i class="fa-solid fa-user"></i> User-Friendly UI.</li>
-                <li><i class="fa-solid fa-sync-alt"></i> Regular updates.</li>
-            </ul>
+        <div class="tab-content" id="beta">
+            <div class="link-script-card">⚡ Explore experimental beta scripts here.</div>
+            <div class="link-script-card">🚀 Try the newest executor before release!</div>
+            <div class="link-script-card">🔧 Debugging features available in this version.</div>
+        </div>
+
+        <!-- Link to Pastebin -->
+        <div class="link-Game">
+            <a href="https://pastebin.com/ur-a-nigga-see" class="link">
+                <i class="fa-brands fa-java"></i> Java Lua
+            </a>
         </div>
     </div>
-
-    <div class="tab-content" id="scripts">
-        <div class="link-card">
-            <h2>Script Collection</h2>
-            <p>Use these scripts with the executor:</p>
-
-            <div class="script">
-                <h3><i class="fa-solid fa-terminal"></i> Infinite Yield</h3>
-                <p>Powerful admin script with tons of commands.</p>
-                <a href="https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source" class="download-button">Get Script</a>
-            </div>
-
-            <div class="script">
-                <h3><i class="fa-solid fa-terminal"></i> Remote Spy</h3>
-                <p>Spies on remote events and functions.</p>
-                <a href="https://pastebin.com/raw/your-script-url" class="download-button">Get Script</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab-content" id="downloading">
-        <div class="link-card">
-            <h2>How to Download</h2>
-            <p>Follow these steps:</p>
-            <ol>
-                <li>Click the download button.</li>
-                <li>Wait for the download to complete.</li>
-                <li>Open the file and follow installation steps.</li>
-                <li>Disable antivirus if it blocks the file.</li>
-            </ol>
-            <a href="path/to/download" class="download-button" onclick="startDownload()">Download Now</a>
-        </div>
-
-        <div class="link-card">
-            <h2>Download Progress</h2>
-            <p>Download status:</p>
-            <div id="progress-text">Waiting...</div>
-            <div style="width: 100%; background: rgba(255, 255, 255, 0.1); border-radius: 10px;">
-                <div id="progress-bar" style="width: 0; height: 10px; background: var(--neon); border-radius: 5px;"></div>
-            </div>
-        </div>
-
-        <div class="link-card">
-            <h2>Common Issues</h2>
-            <p><b>Download not starting?</b> Try another browser or disable ad-blocker.</p>
-            <p><b>File won't open?</b> Disable antivirus temporarily.</p>
-            <p>Need help? Contact <a href="mailto:support@tixuexecutor.com" style="color: var(--neon);">support@tixuexecutor.com</a></p>
-        </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2025 TIXU Executor. All rights reserved.</p>
-    </footer>
 
     <script>
         document.querySelectorAll('.tab-button').forEach(button => {
@@ -202,24 +219,29 @@
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 button.classList.add('active');
                 document.getElementById(button.dataset.tab).classList.add('active');
+                revealElements();
             });
         });
 
-        function startDownload() {
-            let bar = document.getElementById("progress-bar");
-            let text = document.getElementById("progress-text");
-            let width = 0;
-            let interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    text.innerText = "Download Complete!";
-                } else {
-                    width += 10;
-                    bar.style.width = width + "%";
-                    text.innerText = "Downloading... " + width + "%";
-                }
-            }, 500);
+        function revealElements() {
+            document.querySelectorAll('.link-script-card').forEach((element, index) => {
+                setTimeout(() => {
+                    element.classList.add('visible');
+                }, index * 200);
+            });
         }
+
+        document.addEventListener("scroll", () => {
+            document.querySelectorAll(".link-script-card").forEach((element) => {
+                let position = element.getBoundingClientRect().top;
+                let windowHeight = window.innerHeight;
+                if (position < windowHeight - 50) {
+                    element.classList.add("visible");
+                }
+            });
+        });
+
+        revealElements();
     </script>
 </body>
 </html>
