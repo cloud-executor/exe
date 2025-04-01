@@ -28,7 +28,7 @@
 
         .container {
             width: 90%;
-            max-width: 600px;
+            max-width: 800px;
             margin: auto;
             padding: 30px;
             background: rgba(0, 0, 0, 0.6);
@@ -102,7 +102,7 @@
             transform: translate(100%, 100%);
         }
 
-        .tab-buttons {
+        .tab-container {
             display: flex;
             justify-content: center;
             gap: 15px;
@@ -187,29 +187,44 @@
             <button class="search-button"><i class="fa-solid fa-search"></i> Search</button>
         </div>
 
-        <div class="tab-buttons">
+        <div class="tab-container">
             <button class="tab-button active" data-tab="scripts">Scripts</button>
             <button class="tab-button" data-tab="beta">Beta Scripts</button>
+            <button class="tab-button" data-tab="games">Games</button>
         </div>
 
         <div class="tab-content active" id="scripts">
-            <div class="link-script-card">🔍 Find stable and tested scripts here.</div>
-            <div class="link-script-card">🔥 New auto-execution script available!</div>
-            <div class="link-script-card">⚡ Optimized performance Lua executor.</div>
+            <div class="link-script-card">
+                <a href="https://pastebin.com/sample-script1" class="link">🔍 Find stable and tested scripts here.</a>
+            </div>
+            <div class="link-script-card">
+                <a href="https://pastebin.com/sample-script2" class="link">🔥 New auto-execution script available!</a>
+            </div>
+            <div class="link-script-card">
+                <a href="https://pastebin.com/sample-script3" class="link">⚡ Optimized performance Lua executor.</a>
+            </div>
         </div>
 
         <div class="tab-content" id="beta">
-            <div class="link-script-card">⚡ Explore experimental beta scripts here.</div>
-            <div class="link-script-card">🚀 Try the newest executor before release!</div>
-            <div class="link-script-card">🔧 Debugging features available in this version.</div>
+            <div class="link-script-card">
+                <a href="https://pastebin.com/sample-beta1" class="link">⚡ Explore experimental beta scripts here.</a>
+            </div>
+            <div class="link-script-card">
+                <a href="https://pastebin.com/sample-beta2" class="link">🚀 Try the newest executor before release!</a>
+            </div>
+            <div class="link-script-card">
+                <a href="https://pastebin.com/sample-beta3" class="link">🔧 Debugging features available in this version.</a>
+            </div>
         </div>
 
-        <!-- Link to Pastebin -->
-        <div class="link-Game">
-            <a href="https://pastebin.com/ur-a-nigga-see" class="link">
-                <i class="fa-brands fa-java"></i> Java Lua
-            </a>
+        <div class="tab-content" id="games">
+            <div class="link-Game">
+                <a href="https://pastebin.com/ur-a-nigga-see" class="link">
+                    <i class="fa-brands fa-java"></i> Java Lua Game Scripts
+                </a>
+            </div>
         </div>
+
     </div>
 
     <script>
