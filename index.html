@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lua Executors & Scripts</title>
+    <title>3D Lua Executors</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -20,8 +20,78 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
             overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            color: var(--neon);
+            text-shadow: 0 0 10px var(--glow);
+            margin-top: 20px;
+        }
+
+        /* 3D Spinning Cube */
+        .cube {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spinCube 2s linear infinite;
+        }
+
+        .cube div {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: var(--neon);
+            border: 2px solid black;
+            opacity: 0.8;
+        }
+
+        .cube .front { transform: translateZ(25px); }
+        .cube .back { transform: rotateY(180deg) translateZ(25px); }
+        .cube .left { transform: rotateY(-90deg) translateZ(25px); }
+        .cube .right { transform: rotateY(90deg) translateZ(25px); }
+        .cube .top { transform: rotateX(90deg) translateZ(25px); }
+        .cube .bottom { transform: rotateX(-90deg) translateZ(25px); }
+
+        @keyframes spinCube {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 60%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background: var(--neon);
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
         }
 
         /* Sidebar */
@@ -29,7 +99,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 80px;
+            width: 70px;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
             display: flex;
@@ -37,11 +107,12 @@
             align-items: center;
             padding-top: 30px;
             transition: width 0.3s;
-            box-shadow: 5px 0 15px var(--glow);
+            box-shadow: 5px 0 20px var(--glow);
+            transform: perspective(800px) translateZ(30px);
         }
 
         .sidebar:hover {
-            width: 220px;
+            width: 230px;
         }
 
         .sidebar a {
@@ -54,99 +125,127 @@
             width: 100%;
             font-size: 1.2rem;
             transition: 0.3s;
+            border-radius: 10px;
         }
 
         .sidebar a:hover {
             background: var(--neon);
             color: black;
-            transform: scale(1.05);
+            transform: perspective(600px) translateZ(40px);
             box-shadow: 0 0 20px var(--glow);
         }
 
-        /* Page content */
+        /* Content */
         .content {
+            display: none;
             margin-left: 100px;
             padding: 50px;
         }
 
+        /* 3D Sections */
         .section {
-            padding: 80px;
-            background: rgba(0, 0, 0, 0.6);
+            padding: 60px;
+            background: rgba(0, 0, 0, 0.8);
             margin-bottom: 60px;
             border-radius: 20px;
             border: 2px solid var(--glow);
-            box-shadow: 0 0 25px var(--glow);
+            box-shadow: 0 10px 30px var(--glow);
             opacity: 0;
-            transform: translateY(80px);
-            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+            transform: translateY(80px) scale(0.95);
+            transition: opacity 0.7s, transform 0.7s, box-shadow 0.3s;
         }
 
         .section.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
-        /* 3D Buttons */
-        .link-script-card {
-            display: inline-block;
-            padding: 20px 40px;
-            font-size: 1.5rem;
-            background: var(--neon);
-            color: black;
-            border-radius: 15px;
-            text-decoration: none;
-            transition: 0.4s;
-            box-shadow: 0 10px 30px var(--glow);
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .link-script-card:hover {
-            transform: translateY(-10px) scale(1.05);
+        .section:hover {
             box-shadow: 0 15px 40px var(--glow);
         }
 
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 60px;
+                flex-direction: row;
+                justify-content: center;
+                padding: 10px 0;
+            }
+
+            .sidebar a {
+                font-size: 1rem;
+                padding: 10px;
+            }
+
+            .content {
+                margin-left: 0;
+                padding-top: 80px;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <div class="loading-screen">
+        <div class="cube">
+            <div class="front"></div>
+            <div class="back"></div>
+            <div class="left"></div>
+            <div class="right"></div>
+            <div class="top"></div>
+            <div class="bottom"></div>
+        </div>
+        <div class="loading-text">Loading...</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="#executors"><i class="fa-solid fa-code"></i> Executors</a>
         <a href="#scripts"><i class="fa-solid fa-terminal"></i> Scripts</a>
-        <a href="#new-tab"><i class="fa-solid fa-plus"></i> New Tab</a>
     </div>
 
     <!-- Main Content -->
     <div class="content">
-
-        <!-- Executors Section -->
         <div class="section" id="executors">
             <h2>🔥 Available Executors</h2>
             <a href="https://pastebin.com/your-executor-link" class="link-script-card">Download Executor</a>
         </div>
 
-        <!-- Scripts Section -->
         <div class="section" id="scripts">
             <h2>⚡ High-Quality Lua Scripts</h2>
             <a href="https://pastebin.com/your-script-link" class="link-script-card">Get Script</a>
         </div>
-
-        <!-- New Tab Section -->
-        <div class="section" id="new-tab">
-            <h2>📂 New Tab</h2>
-            <p>More content coming soon!</p>
-        </div>
-
     </div>
 
     <script>
-        // Scroll animations
-        const sections = document.querySelectorAll('.section');
+        // Simulated Loading Effect
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar');
+        const loadingScreen = document.querySelector('.loading-screen');
+        const content = document.querySelector('.content');
+
+        let loadingInterval = setInterval(() => {
+            progress += 10;
+            progressBar.style.width = progress + "%";
+            if (progress >= 100) {
+                clearInterval(loadingInterval);
+                loadingScreen.style.opacity = "0";
+                setTimeout(() => {
+                    loadingScreen.style.display = "none";
+                    content.style.display = "block";
+                }, 1000);
+            }
+        }, 500);
+
+        // Scroll Animations
         window.addEventListener('scroll', () => {
-            sections.forEach(sec => {
-                const rect = sec.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 100) {
+            document.querySelectorAll('.section').forEach(sec => {
+                if (sec.getBoundingClientRect().top < window.innerHeight - 100) {
                     sec.classList.add('visible');
                 }
             });
