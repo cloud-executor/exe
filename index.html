@@ -24,74 +24,16 @@
             perspective: 1000px;
         }
 
-        /* Loading Screen */
-        .loading-screen {
+        /* Parallax Background */
+        .bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .loading-text {
-            font-size: 1.5rem;
-            color: var(--neon);
-            text-shadow: 0 0 10px var(--glow);
-            margin-top: 20px;
-        }
-
-        /* 3D Spinning Cube */
-        .cube {
-            width: 50px;
-            height: 50px;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: spinCube 2s linear infinite;
-        }
-
-        .cube div {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background: var(--neon);
-            border: 2px solid black;
-            opacity: 0.8;
-        }
-
-        .cube .front { transform: translateZ(25px); }
-        .cube .back { transform: rotateY(180deg) translateZ(25px); }
-        .cube .left { transform: rotateY(-90deg) translateZ(25px); }
-        .cube .right { transform: rotateY(90deg) translateZ(25px); }
-        .cube .top { transform: rotateX(90deg) translateZ(25px); }
-        .cube .bottom { transform: rotateX(-90deg) translateZ(25px); }
-
-        @keyframes spinCube {
-            0% { transform: rotateX(0deg) rotateY(0deg); }
-            100% { transform: rotateX(360deg) rotateY(360deg); }
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            width: 60%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .progress-bar {
-            width: 0;
-            height: 100%;
-            background: var(--neon);
-            border-radius: 10px;
-            transition: width 0.5s ease-in-out;
+            width: 120%;
+            height: 120%;
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, rgba(0,255,0,0.1) 0%, transparent 70%);
+            z-index: -1;
+            transform: translateZ(-200px);
         }
 
         /* Sidebar */
@@ -126,6 +68,7 @@
             font-size: 1.2rem;
             transition: 0.3s;
             border-radius: 10px;
+            transform: perspective(600px) translateZ(20px);
         }
 
         .sidebar a:hover {
@@ -137,7 +80,6 @@
 
         /* Content */
         .content {
-            display: none;
             margin-left: 100px;
             padding: 50px;
         }
@@ -152,7 +94,7 @@
             box-shadow: 0 10px 30px var(--glow);
             opacity: 0;
             transform: translateY(80px) scale(0.95);
-            transition: opacity 0.7s, transform 0.7s, box-shadow 0.3s;
+            transition: opacity 0.7s, transform 0.7s, box-shadow 0.3s, rotateX 0.3s, rotateY 0.3s;
         }
 
         .section.visible {
@@ -162,6 +104,27 @@
 
         .section:hover {
             box-shadow: 0 15px 40px var(--glow);
+        }
+
+        /* 3D Buttons */
+        .link-script-card {
+            display: inline-block;
+            padding: 18px 35px;
+            font-size: 1.5rem;
+            background: var(--neon);
+            color: black;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: 0.4s;
+            box-shadow: 0 10px 30px var(--glow);
+            transform: perspective(500px) translateZ(10px);
+        }
+
+        .link-script-card:hover {
+            transform: perspective(500px) translateZ(40px) rotateX(10deg) rotateY(10deg);
+            box-shadow: 0 15px 50px var(--glow);
         }
 
         /* Responsive */
@@ -188,68 +151,64 @@
 </head>
 <body>
 
-    <div class="loading-screen">
-        <div class="cube">
-            <div class="front"></div>
-            <div class="back"></div>
-            <div class="left"></div>
-            <div class="right"></div>
-            <div class="top"></div>
-            <div class="bottom"></div>
-        </div>
-        <div class="loading-text">Loading...</div>
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-    </div>
+    <div class="bg"></div>
 
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="#executors"><i class="fa-solid fa-code"></i> Executors</a>
         <a href="#scripts"><i class="fa-solid fa-terminal"></i> Scripts</a>
+        <a href="#new-tab"><i class="fa-solid fa-plus"></i> New Tab</a>
     </div>
 
     <!-- Main Content -->
     <div class="content">
+
+        <!-- Executors Section -->
         <div class="section" id="executors">
             <h2>🔥 Available Executors</h2>
             <a href="https://pastebin.com/your-executor-link" class="link-script-card">Download Executor</a>
         </div>
 
+        <!-- Scripts Section -->
         <div class="section" id="scripts">
             <h2>⚡ High-Quality Lua Scripts</h2>
             <a href="https://pastebin.com/your-script-link" class="link-script-card">Get Script</a>
         </div>
+
+        <!-- New Tab Section -->
+        <div class="section" id="new-tab">
+            <h2>📂 New Tab</h2>
+            <p>More content coming soon!</p>
+        </div>
+
     </div>
 
     <script>
-        // Simulated Loading Effect
-        let progress = 0;
-        const progressBar = document.getElementById('progress-bar');
-        const loadingScreen = document.querySelector('.loading-screen');
-        const content = document.querySelector('.content');
-
-        let loadingInterval = setInterval(() => {
-            progress += 10;
-            progressBar.style.width = progress + "%";
-            if (progress >= 100) {
-                clearInterval(loadingInterval);
-                loadingScreen.style.opacity = "0";
-                setTimeout(() => {
-                    loadingScreen.style.display = "none";
-                    content.style.display = "block";
-                }, 1000);
-            }
-        }, 500);
-
-        // Scroll Animations
+        // Scroll animations
+        const sections = document.querySelectorAll('.section');
         window.addEventListener('scroll', () => {
-            document.querySelectorAll('.section').forEach(sec => {
-                if (sec.getBoundingClientRect().top < window.innerHeight - 100) {
+            sections.forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
                     sec.classList.add('visible');
                 }
             });
         });
+
+        // 3D Tilt Effect
+        document.querySelectorAll('.section, .link-script-card').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                let rect = el.getBoundingClientRect();
+                let x = (e.clientX - rect.left) / rect.width - 0.5;
+                let y = (e.clientY - rect.top) / rect.height - 0.5;
+                el.style.transform = `rotateX(${y * -15}deg) rotateY(${x * 15}deg) scale(1.02)`;
+            });
+
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
     </script>
 
 </body>
