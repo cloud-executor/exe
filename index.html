@@ -3,260 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Finder 3D</title>
+    <title>Lua Executors & Scripts</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root {
             --neon: #00ff00;
-            --glow: rgba(0, 255, 0, 0.8);
-            --dark: #0a0a0a;
-            --light-dark: #111;
+            --glow: rgba(0, 255, 0, 0.5);
+            --dark: #000;
         }
 
         body {
-            background: radial-gradient(circle, rgba(0, 255, 0, 0.05) 10%, transparent 60%), var(--dark);
+            background: var(--dark);
             color: white;
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             overflow-x: hidden;
-            perspective: 1000px;
         }
 
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: auto;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            border: 2px solid var(--glow);
-            box-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow) inset;
-            backdrop-filter: blur(15px);
-            text-align: center;
-            transform: rotateX(10deg) rotateY(10deg);
-            transition: transform 0.5s ease-out;
-        }
-
-        .container:hover {
-            transform: rotateX(0deg) rotateY(0deg) scale(1.05);
-        }
-
-        .search-box {
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 70px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            border: 2px solid var(--glow);
-            box-shadow: 0 0 10px var(--glow);
-            transition: transform 0.3s ease-in-out;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            transition: width 0.3s;
         }
 
-        .search-box:hover {
-            transform: scale(1.1);
+        .sidebar:hover {
+            width: 200px;
         }
 
-        .search-input {
-            flex: 1;
-            padding: 14px;
-            font-size: 1rem;
-            color: white;
-            background: transparent;
-            border: none;
-            outline: none;
-            text-shadow: 0 0 5px var(--glow);
-        }
-
-        .search-button {
-            padding: 14px 22px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: black;
-            background: var(--neon);
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--glow), 0 0 30px var(--glow) inset;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .search-button::after {
-            content: '';
-            position: absolute;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 60%);
-            top: -100%;
-            left: -100%;
-            transition: transform 0.4s ease-out;
-        }
-
-        .search-button:hover::after {
-            transform: translate(100%, 100%);
-        }
-
-        .tab-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .tab-button {
-            padding: 12px 22px;
-            background: transparent;
-            border: 2px solid var(--neon);
+        .sidebar a {
+            text-decoration: none;
             color: var(--neon);
-            border-radius: 12px;
-            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            width: 100%;
             transition: 0.3s;
-            box-shadow: 0 0 10px var(--glow) inset;
-            transform: translateY(0);
         }
 
-        .tab-button:hover {
-            background: var(--neon);
-            color: black;
-            transform: translateY(-3px);
-        }
-
-        .tab-button.active {
+        .sidebar a:hover {
             background: var(--neon);
             color: black;
         }
 
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
+        /* Page content */
+        .content {
+            margin-left: 80px;
+            padding: 20px;
         }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        .link-script-card {
+        .section {
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--glow);
+            box-shadow: 0 0 15px var(--glow);
             opacity: 0;
             transform: translateY(50px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--glow);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 20px;
-            box-shadow: 0 0 15px var(--glow);
+            transition: opacity 0.5s, transform 0.5s;
         }
 
-        .link-script-card.visible {
+        .section.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .link-Game {
-            margin-top: 20px;
-        }
-
-        .link {
-            color: var(--neon);
+        /* 3D buttons */
+        .link-script-card {
+            display: inline-block;
+            padding: 15px 30px;
             font-size: 1.2rem;
+            background: var(--neon);
+            color: black;
+            border-radius: 10px;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px var(--glow);
         }
 
-        .link:hover {
-            color: white;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .link-script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px var(--glow);
         }
 
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="search-box">
-            <input type="text" class="search-input" placeholder="Search for scripts...">
-            <button class="search-button"><i class="fa-solid fa-search"></i> Search</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#executors"><i class="fa-solid fa-code"></i> Executors</a>
+        <a href="#scripts"><i class="fa-solid fa-terminal"></i> Scripts</a>
+        <a href="#new-tab"><i class="fa-solid fa-plus"></i> New Tab</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+
+        <!-- Executors Section -->
+        <div class="section" id="executors">
+            <h2>🔥 Available Executors</h2>
+            <a href="https://pastebin.com/your-executor-link" class="link-script-card">Download Executor</a>
         </div>
 
-        <div class="tab-container">
-            <button class="tab-button active" data-tab="scripts">Scripts</button>
-            <button class="tab-button" data-tab="beta">Beta Scripts</button>
-            <button class="tab-button" data-tab="games">Games</button>
+        <!-- Scripts Section -->
+        <div class="section" id="scripts">
+            <h2>⚡ High-Quality Lua Scripts</h2>
+            <a href="https://pastebin.com/your-script-link" class="link-script-card">Get Script</a>
         </div>
 
-        <div class="tab-content active" id="scripts">
-            <div class="link-script-card">
-                <a href="https://pastebin.com/sample-script1" class="link">🔍 Find stable and tested scripts here.</a>
-            </div>
-            <div class="link-script-card">
-                <a href="https://pastebin.com/sample-script2" class="link">🔥 New auto-execution script available!</a>
-            </div>
-            <div class="link-script-card">
-                <a href="https://pastebin.com/sample-script3" class="link">⚡ Optimized performance Lua executor.</a>
-            </div>
-        </div>
-
-        <div class="tab-content" id="beta">
-            <div class="link-script-card">
-                <a href="https://pastebin.com/sample-beta1" class="link">⚡ Explore experimental beta scripts here.</a>
-            </div>
-            <div class="link-script-card">
-                <a href="https://pastebin.com/sample-beta2" class="link">🚀 Try the newest executor before release!</a>
-            </div>
-            <div class="link-script-card">
-                <a href="https://pastebin.com/sample-beta3" class="link">🔧 Debugging features available in this version.</a>
-            </div>
-        </div>
-
-        <div class="tab-content" id="games">
-            <div class="link-Game">
-                <a href="https://pastebin.com/ur-a-nigga-see" class="link">
-                    <i class="fa-brands fa-java"></i> Java Lua Game Scripts
-                </a>
-            </div>
+        <!-- New Tab Section -->
+        <div class="section" id="new-tab">
+            <h2>📂 New Tab</h2>
+            <p>More content coming soon!</p>
         </div>
 
     </div>
 
     <script>
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                button.classList.add('active');
-                document.getElementById(button.dataset.tab).classList.add('active');
-                revealElements();
-            });
-        });
-
-        function revealElements() {
-            document.querySelectorAll('.link-script-card').forEach((element, index) => {
-                setTimeout(() => {
-                    element.classList.add('visible');
-                }, index * 200);
-            });
-        }
-
-        document.addEventListener("scroll", () => {
-            document.querySelectorAll(".link-script-card").forEach((element) => {
-                let position = element.getBoundingClientRect().top;
-                let windowHeight = window.innerHeight;
-                if (position < windowHeight - 50) {
-                    element.classList.add("visible");
+        // Scroll animations
+        const sections = document.querySelectorAll('.section');
+        window.addEventListener('scroll', () => {
+            sections.forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 50) {
+                    sec.classList.add('visible');
                 }
             });
         });
-
-        revealElements();
     </script>
+
 </body>
 </html>
