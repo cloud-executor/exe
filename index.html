@@ -10,7 +10,7 @@
     <style>
         :root {
             --neon: #00ff00;
-            --glow: rgba(0, 255, 0, 0.5);
+            --glow: rgba(0, 255, 0, 0.8);
             --dark: #000;
         }
 
@@ -29,18 +29,19 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 70px;
+            width: 80px;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 20px;
+            padding-top: 30px;
             transition: width 0.3s;
+            box-shadow: 5px 0 15px var(--glow);
         }
 
         .sidebar:hover {
-            width: 200px;
+            width: 220px;
         }
 
         .sidebar a {
@@ -48,33 +49,36 @@
             color: var(--neon);
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 15px;
+            gap: 15px;
+            padding: 20px;
             width: 100%;
+            font-size: 1.2rem;
             transition: 0.3s;
         }
 
         .sidebar a:hover {
             background: var(--neon);
             color: black;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--glow);
         }
 
         /* Page content */
         .content {
-            margin-left: 80px;
-            padding: 20px;
+            margin-left: 100px;
+            padding: 50px;
         }
 
         .section {
-            padding: 50px;
-            background: rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
-            border-radius: 15px;
-            border: 1px solid var(--glow);
-            box-shadow: 0 0 15px var(--glow);
+            padding: 80px;
+            background: rgba(0, 0, 0, 0.6);
+            margin-bottom: 60px;
+            border-radius: 20px;
+            border: 2px solid var(--glow);
+            box-shadow: 0 0 25px var(--glow);
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.5s, transform 0.5s;
+            transform: translateY(80px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
         }
 
         .section.visible {
@@ -82,22 +86,24 @@
             transform: translateY(0);
         }
 
-        /* 3D buttons */
+        /* 3D Buttons */
         .link-script-card {
             display: inline-block;
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 20px 40px;
+            font-size: 1.5rem;
             background: var(--neon);
             color: black;
-            border-radius: 10px;
+            border-radius: 15px;
             text-decoration: none;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px var(--glow);
+            transition: 0.4s;
+            box-shadow: 0 10px 30px var(--glow);
+            text-align: center;
+            font-weight: bold;
         }
 
         .link-script-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px var(--glow);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 40px var(--glow);
         }
 
     </style>
@@ -140,7 +146,7 @@
         window.addEventListener('scroll', () => {
             sections.forEach(sec => {
                 const rect = sec.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 50) {
+                if (rect.top < window.innerHeight - 100) {
                     sec.classList.add('visible');
                 }
             });
