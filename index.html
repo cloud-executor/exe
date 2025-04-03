@@ -10,31 +10,45 @@
 </head>
 <body>
     <div class="container">
-        <!-- Buttons to toggle content visibility -->
         <div class="toggle-buttons">
-            <button class="toggle-button" onclick="toggleVisibility('A')">Best</button>
-            <button class="toggle-button" onclick="toggleVisibility('B')">Beta</button>
-            <button class="toggle-button" onclick="toggleVisibility('C')">Mine</button>
-            <button class="toggle-button" onclick="toggleVisibility('C')">Games</button>
+            <button class="toggle-button" onclick="toggleVisibility('linkA')">Best</button>
+            <button class="toggle-button" onclick="toggleVisibility('linkB')">Beta</button>
+            <button class="toggle-button" onclick="toggleVisibility('linkC')">Mine</button>
+            <button class="toggle-button" onclick="toggleVisibility('linkD')">Games</button>
         </div>
 
-        <!-- Beta Scripts Section -->
-        <div class="section" id="B">
+        <div class="section" id="linkB">
             <h2>Still working on it..</h2>
-            <div class="section" id="B"><h2>Auto farm V2</h2><div class="link-Game"><a href="https://pastefy.app/jJva7Ik6/raw" class="link"><i class="fa-brands fa-java"></i> Java Lua Game Scripts</a></div></div>
-       </div>
-
-        <div class="section" id="A">
-            <h2>BEST COOKED SCRIPTS</h2>
-            <div class="section" id="A"><h2>AK 47</h2><div class="link-Game"><a href="https://rawscripts.net/raw/Universal-Script-EPIC-FE-AK47-5040" class="link"><i class="fa-brands fa-java"></i> Java Lua Game Scripts</a></div></div>
+            <div class="link-Game">
+                <a href="https://pastefy.app/jJva7Ik6/raw" class="link">
+                    <i class="fa-brands fa-java"></i> Java Lua Game Scripts
+                </a>
+            </div>
         </div>
+
+        <div class="section" id="linkA">
+            <h2>BEST COOKED SCRIPTS</h2>
+            <div class="link-Game">
+                <a href="https://rawscripts.net/raw/Universal-Script-EPIC-FE-AK47-5040" class="link">
+                    <i class="fa-brands fa-java"></i> Java Lua Game Scripts
+                </a>
+            </div>
+        </div>
+
+        <div class="section" id="linkC">
+            <h2>Mine Section</h2>
+            <!-- Add content for Mine scripts here -->
+        </div>
+
+        <div class="section" id="linkD">
+            <h2>Games Section</h2>
+            <!-- Add content for Games scripts here -->
+        </div>
+    </div>
 
     <script>
-        // Toggle the visibility of a section when the respective button is clicked
-        function toggleVisibility(sectionId) {
-            const section = document.getElementById(sectionId);
-            section.style.display = section.style.display === 'none' || section.style.display === '' ? 'block' : 'none';
-        }
+        // One line to toggle visibility of link cards
+        function toggleVisibility(sectionId) { document.getElementById(sectionId).style.display = document.getElementById(sectionId).style.display === 'none' ? 'block' : 'none'; }
     </script>
 </body>
 </html>
